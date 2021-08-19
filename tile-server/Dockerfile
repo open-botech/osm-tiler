@@ -1,10 +1,8 @@
 FROM node:12
 
-COPY update_pg_info.sh update_apt_source.sh /
+COPY update_db_info.sh /
 
-RUN cat /etc/apt/sources.list \
-  # && sh /update_apt_source.sh \
-  && apt-get clean && apt-get update --fix-missing && apt-get upgrade -y --no-install-recommends --allow-unauthenticated && apt-get install -y --no-install-recommends --allow-unauthenticated \
+RUN apt-get clean && apt-get update --fix-missing && apt-get upgrade -y --no-install-recommends --allow-unauthenticated && apt-get install -y --no-install-recommends --allow-unauthenticated \
   fonts-noto-cjk fonts-noto-hinted fonts-noto-unhinted fonts-hanazono ttf-unifont \
   && rm -rf /var/lib/apt/lists/*
 
@@ -15,7 +13,7 @@ RUN mkdir -p /home/openstreetmap-carto-src \
   && git clone --branch v5.3.1 https://gitee.com/xuhj2015/openstreetmap-carto.git  \
   # && git clone --branch v5.3.1 https://github.com/gravitystorm/openstreetmap-carto.git  \
   && cd openstreetmap-carto \
-  && sh /update_pg_info.sh \
+  && sh /update_db_info.sh \
   && npm install -g carto \
   && carto project.mml > /mapnik.xml \
   && cp -r ./symbols / \

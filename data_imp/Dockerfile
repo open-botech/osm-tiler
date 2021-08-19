@@ -6,7 +6,7 @@ ENV AUTOVACUUM=on
 ENV UPDATES=disabled
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY update_pg_info.sh /
+COPY update_db_info.sh update_source_code.sh /
 
 # Install dependencies
 RUN apt-get update \
@@ -26,4 +26,5 @@ COPY . .
 RUN git clone https://gitee.com/xuhj2015/openstreetmap-carto.git \
     && cd openstreetmap-carto \
     && git checkout v5.3.1 \
-    && sh /update_pg_info.sh 
+    && sh /update_db_info.sh \
+    && sh /update_source_code.sh

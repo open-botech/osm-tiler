@@ -7,4 +7,3 @@ sed -i '29a\    user: "postgres"' project.mml
 sed -i '29a\    password: "botech123"' project.mml
 sed -i '29a\    dbname: "gis"' project.mml
 
-sed -i '103,111d' scripts/get-external-data.py
