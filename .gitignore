@@ -44,3 +44,6 @@ gen/
 logs/
 log
 temp/
+
+### osm ###
+*.pbf

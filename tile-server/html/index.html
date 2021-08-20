@@ -4,43 +4,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>my-tiler-demo</title>
   <style type="text/css">
-    html,body{margin:0px;height:100%;width:100%}
-    .container{width:100%;height:100%}
+    html, body {
+        margin: 0px;
+        height: 100%;
+        width: 100%
+    }
+
+    .container {
+        width: 100%;
+        height: 100%
+    }
+
+    .center {
+        text-align: center;
+        padding: 100px;
+    }
+
+    .center input {
+        border: 1px solid #333;
+    }
+
+    .center #ip {
+        width: 100px;
+    }
+
+    .center #port {
+        width: 40px;
+    }
+
+    .center a {
+        text-decoration: underline;
+        cursor: pointer;
+    }
   </style>
   <link rel="stylesheet" href="html/maptalks.css">
   <script type="text/javascript" src="html/maptalks.min.js"></script>
-  <script>
-    function draw() {
-      var coordinates = document.getElementById("coordinates").value;
-      var geometry = maptalks.Geometry.fromJSON(coordinates);
-      layer.addGeometry(geometry);
-    }
-  </script>
+
   <body>
-    <div id="map" class="container"></div>
+  <!-- server link container -->
+  <div id="link" class="container">
+      <div class="center">
+          http://<input type="text" id="ip">:<input type="text" id="port">
+          <br><br>
+          <a onclick="linkServer()">连接到服务器</a>
+      </div>
+  </div>
+  <!-- map container -->
+  <div id="map" class="container" hidden="true"></div>
 
-    <script>
+  <script>
 
-      var map = new maptalks.Map('map', {
-        center: [120.3557088,36.073355],
-        zoom: 17,
-        spatialReference:{
-          projection:'EPSG:3857'
-          // projection:'EPSG:4326'
-        },
-        baseLayer: new maptalks.TileLayer('base', {
-          urlTemplate: 'http://localhost:3000/tile/{z}/{x}/{y}',
-          crossOrigin: 'anonymous',
-          spatialReference:{
-            projection:'EPSG:3857'
-            // projection:'EPSG:4326'
-          },
-          subdomains: ['a','b','c','d'],
-          attribution: ''
-        })
-      });
-      var layer = new maptalks.VectorLayer('vector').addTo(map);
-      layer.addGeometry(maptalks.Geometry.fromJSON('{"type":"Point","coordinates":[120.3555088,36.073155]}'));
-    </script>
+      function linkServer() {
+          var ip = document.getElementById("ip").value;
+          var port = document.getElementById("port").value;
+          var serverAddress = validateIp(ip) + ':' + validatePort(port);
+          initMap(serverAddress);
+          showMap();
+      }
+
+      function validateIp(ip) {
+          return ip;
+      }
+
+      function validatePort(port) {
+          return port;
+      }
+
+      function showMap() {
+          document.getElementById("link").hidden = true;
+          document.getElementById("map").hidden = false;
+      }
+
+      function initMap(serverAddress) {
+          var map = new maptalks.Map('map', {
+              center: [120.3557088, 36.073355],
+              zoom: 17,
+              spatialReference: {
+                  projection: 'EPSG:3857'
+              },
+              baseLayer: new maptalks.TileLayer('base', {
+                  urlTemplate: 'http://' + serverAddress + '/tile/{z}/{x}/{y}',
+                  crossOrigin: 'anonymous',
+                  spatialReference: {
+                      projection: 'EPSG:3857'
+                  },
+                  subdomains: ['a', 'b', 'c', 'd'],
+                  attribution: ''
+              })
+          });
+          var layer = new maptalks.VectorLayer('vector').addTo(map);
+
+          layer.addGeometry(maptalks.Geometry.fromJSON('{"type":"Point","coordinates":[120.3555088,36.073155]}'));
+      }
+
+
+  </script>
   </body>
 </html>

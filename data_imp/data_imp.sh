@@ -1,12 +1,13 @@
 #!/bin/bash
 
-pg_host="172.16.1.191"
-pg_port="5432"
-pg_username="postgres"
-pg_password="botech123"
-pg_database="gis"
+pg_host=$PG_HOST
+pg_port=$PG_PORT
+pg_username=$PG_USER
+pg_password=$PG_PASSWORD
+pg_database=$PG_DBNAME
+osm_file_name=$OSM_FILE_NAME
 
-osm2pgsql --create --database $pg_database -G -C 5000 ./china-latest.osm.pbf -H $pg_host -P $pg_port -U $pg_username -W --slim --hstore --hstore-add-index  --style openstreetmap-carto/openstreetmap-carto.style --tag-transform-script openstreetmap-carto/openstreetmap-carto.lua
+osm2pgsql --create --database $pg_database -G -C 5000 ./$osm_file_name -H $pg_host -P $pg_port -U $pg_username -W --slim --hstore --hstore-add-index  --style openstreetmap-carto/openstreetmap-carto.style --tag-transform-script openstreetmap-carto/openstreetmap-carto.lua
 
 cd openstreetmap-carto
 

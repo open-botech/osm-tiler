@@ -6,7 +6,12 @@ ENV AUTOVACUUM=on
 ENV UPDATES=disabled
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY update_db_info.sh update_source_code.sh /
+ENV PG_HOST=localhost \
+    PG_PORT=5432 \
+    PG_USER=postgres \
+    PG_PASSWORD=123456 \
+    PG_DBNAME=gis \
+    OSM_FILE_NAME=taiwan-latest.osm.pbf
 
 # Install dependencies
 RUN apt-get update \
@@ -26,5 +31,4 @@ COPY . .
 RUN git clone https://gitee.com/xuhj2015/openstreetmap-carto.git \
     && cd openstreetmap-carto \
     && git checkout v5.3.1 \
-    && sh /update_db_info.sh \
-    && sh /update_source_code.sh
+    && sed -i '103,111d' scripts/get-external-data.py

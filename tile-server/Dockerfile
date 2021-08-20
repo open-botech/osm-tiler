@@ -1,5 +1,12 @@
 FROM node:12
 
+
+ENV PG_HOST=localhost \
+    PG_PORT=5432 \
+    PG_USER=postgres \
+    PG_PASSWORD=123456 \
+    PG_DBNAME=gis
+
 COPY update_db_info.sh /
 
 RUN apt-get clean && apt-get update --fix-missing && apt-get upgrade -y --no-install-recommends --allow-unauthenticated && apt-get install -y --no-install-recommends --allow-unauthenticated \
