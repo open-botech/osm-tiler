@@ -14,7 +14,7 @@ ENV PG_HOST=localhost \
     OSM_FILE_NAME=taiwan-latest.osm.pbf
 
 # Install dependencies
-RUN apt-get update \
+RUN apt-get clean && apt-get update \
     && apt-get install -y wget gnupg2 lsb-core apt-transport-https ca-certificates curl vim \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
     && echo "deb [ trusted=yes ] https://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list \
