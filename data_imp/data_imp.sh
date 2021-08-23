@@ -11,8 +11,6 @@ osm2pgsql --create --database $pg_database -G -C 5000 ./$osm_file_name -H $pg_ho
 
 cd openstreetmap-carto
 
-git checkout v5.3.1
-
 psql -h $pg_host -p $pg_port -U $pg_username -W  -d $pg_database -f indexes.sql
 
 python3 scripts/get-external-data.py -d $pg_database -U $pg_username -w $pg_password -H $pg_host -p $pg_port 

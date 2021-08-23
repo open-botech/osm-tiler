@@ -1,11 +1,11 @@
 FROM node:12
 
 
-ENV PG_HOST=localhost \
+ENV PG_HOST=192.168.43.237 \
     PG_PORT=5432 \
     PG_USER=postgres \
     PG_PASSWORD=123456 \
-    PG_DBNAME=gis
+    PG_DBNAME=postgres
 
 COPY update_db_info.sh /
 
