@@ -28,11 +28,25 @@ tile_server（瓦片渲染服务）的主要功能：
 ```
 
 # 项目部署启动
+#### 环境变量
+```
+PG_HOST：PG库的IP
+    data_imp和tile_server两个容器启动的时候都需要
+PG_PORT：PG库的端口，默认5432
+    data_imp和tile_server两个容器启动的时候都需要
+PG_USER：PG库的用户名，默认postgres
+    data_imp和tile_server两个容器启动的时候都需要
+PG_PASSWORD：PG库的密码，默认123456
+    data_imp和tile_server两个容器启动的时候都需要
+PG_DBNAME：PG库的数据库名，默认postgres
+    data_imp和tile_server两个容器启动的时候都需要
+OSM_FILE_NAME：osm文件名
+    data_imp容器启动的时候都需要，tile_server不需要
+```
 #### data_imp
 ```
-修改配置：data_imp.sh 和 update_pg_info.sh 中的PG库的信息。   （刚回头看，好像不需要执行update_pg_info.sh修改project.mml的数据库信息）
 制作镜像：docker build -t data_imp:v1 .
-容器启动：docker run -d -it data_imp:v1         (要加-it，不需要端口和容器名，用完一次就不用了)
+容器启动：docker run -e PG_HOST:xxx -d -it data_imp:v1         (要加-it，可以不加端口和容器名，用完一次就不用了)
 进入容器：docker exec -it 容器ID /bin/bash
 运行脚本：sh data_imp.sh        
     中间需要输入两次PG库的密码，执行时间非常长，等着就行。
@@ -40,15 +54,14 @@ tile_server（瓦片渲染服务）的主要功能：
     第二条是建立索引，控制台会出现大概7-8条“CREATE INDEX”的字符串， 
     第三条是下载并导入carto需要的其他数据，结果是PG库中出现了一堆非planet_osm开头的表)  
 
-最后：在第三条命令中的python脚本会执行postgresql的“VACUUM analyze”功能，但是执行的时候会出现事务问题，因此在update_pg_info.sh脚本中把相关逻辑删除了。
+最后：在第三条命令中的python脚本会执行postgresql的“VACUUM analyze”功能，但是执行的时候会出现事务问题，因此在dockerfile下载完openstreetmap-carto后把相关逻辑删除了。
 所以可以在data_imp.sh脚本执行完成后，手动执行“VACUUM analyze 表名”操作。
 ```
 
 #### tile_server：
 ```
-修改配置：html/index.html 的node服务信息  和 update_pg_info.sh 中的PG库的信息
 制作镜像：docker build -t map_tiler:v1 .
-容器启动：docker run -d --name osm-tiler -p 3000:3000 map_tiler:v1 
+容器启动：docker run -e PG_HOST:xxx -d --name osm-tiler -p 3000:3000 map_tiler:v1 
     为了不会每次渲染瓦片的时候都加载样式，加载样式比较非常慢，所以使用了线程池，在服务启动、创建线程时加载mapnik样式，所以花费的时间比较长。
     看到“Running on http://0.0.0.0:3000”表示启动成功。
 ```
